@@ -1,0 +1,19 @@
+# Python cache / compiled files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Generated runtime files and directories
+input/
+output/
+
+# TensorFlow / model checkpoint junk
+variables/
+
+# Logs
+*.log
+
+# macOS Finder junk
+.DS_Store

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>ACPLearn - Deep Learning for Anti-cancer Peptides</title>
+  <style>
+    body {
+      background-image: url('/static/background6.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <h1 class="display-4 text-center">ACPLearn v1.0</h1>
+        <p class="lead text-center">A novel deep learning model for the discovery of anti-cancer peptides</p>
+        <!-- Flask will display error messages here if the server-side check fails -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-danger">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form id="peptideForm" action="/" method="post">
+          <div class="form-group">
+            <label for="peptides">Enter peptides in FASTA format (each record must start with '>'):</label>
+            <textarea class="form-control" name="peptides" id="peptides" rows="10" required></textarea>
+          </div>
+          <!-- Button to load sample FASTA data -->
+          <button type="button" id="loadSample" class="btn btn-secondary btn-block">Load Sample FASTA</button>
+          <button type="submit" class="btn btn-primary btn-block mt-2">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Client-side validation script
+    document.getElementById('peptideForm').addEventListener('submit', function(e) {
+      const text = document.getElementById('peptides').value.trim();
+      if (!text) {
+        alert("Input cannot be empty.");
+        e.preventDefault();
+        return;
+      }
+      const validAminoAcids = "ACDEFGHIKLMNPQRSTVWY";
+      const lines = text.split(/\r?\n/);
+      let error = "";
+      let header = null;
+      let sequence = "";
+      
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        if (line.startsWith(">")) {
+          // If we have a previous record, validate it first.
+          if (header !== null) {
+            if (sequence.length < 7) {
+              error = "Sequence for " + header + " is too short. Must be at least 7 amino acids.";
+              break;
+            }
+            for (let char of sequence.toUpperCase()) {
+              if (!validAminoAcids.includes(char)) {
+                error = "Sequence for " + header + " contains invalid characters.";
+                break;
+              }
+            }
+            if (error) break;
+          }
+          header = line; // new header found
+          sequence = "";
+        } else {
+          sequence += line; // build up sequence lines
+        }
+      }
+      // Validate the last record
+      if (!error && header !== null) {
+        if (sequence.length < 7) {
+          error = "Sequence for " + header + " is too short. Must be at least 7 amino acids.";
+        }
+        for (let char of sequence.toUpperCase()) {
+          if (!validAminoAcids.includes(char)) {
+            error = "Sequence for " + header + " contains invalid characters.";
+            break;
+          }
+        }
+      } else if (header === null) {
+        error = "Input does not appear to be in FASTA format. Each record must start with '>'";
+      }
+      if (error) {
+        e.preventDefault();
+        alert(error);
+      }
+    });
+
+    // Event listener for the sample FASTA button
+    document.getElementById("loadSample").addEventListener("click", function() {
+      fetch("/get_sample_fasta")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("peptides").value = data;
+        })
+        .catch(error => {
+          console.error("Error loading sample FASTA:", error);
+          alert("Could not load sample FASTA data.");
+        });
+    });
+  </script>
+</body>
+</html>

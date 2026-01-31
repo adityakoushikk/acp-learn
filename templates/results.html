@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Anticancer Peptide Prediction Results</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="display-4 text-center">Prediction Results</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Peptide Name</th>
+                            <th>ACP Probability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for peptide_name, probability in predictions.items() %}
+                        <tr>
+                            <td>{{ peptide_name }}</td>
+                            <td>{{ probability[0] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <a href="/" class="btn btn-primary btn-block">Back to input form</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
