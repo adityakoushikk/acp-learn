@@ -9,8 +9,8 @@ app = Flask(__name__, static_url_path='/static', static_folder='static')
 from tensorflow import keras
 import pickle
 
-# Define base directory for the app
-BASE_DIR = '/home/ubuntu/app'
+# Define base directory for the app (configurable via env var)
+BASE_DIR = os.environ.get('APP_BASE_DIR', '/home/ubuntu/app')
 
 # Load the deep learning model
 dlmodel = keras.models.load_model(os.path.join(BASE_DIR, 'dlmodel2.h5'))
