@@ -1,4 +1,4 @@
-import { FlaskConical, Dna, BrainCircuit, TableProperties } from "lucide-react";
+import { FlaskConical, Dna, BrainCircuit, TableProperties, Award, Trophy } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -21,7 +21,44 @@ export default function AboutPage() {
           anti-cancer activity, providing researchers with a fast and
           accessible screening method.
         </p>
+        <p className="text-sm text-muted-foreground">
+          Created by <span className="font-semibold text-foreground">Aditya Koushik</span>
+        </p>
       </div>
+
+      {/* Awards */}
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+          <Trophy className="h-5 w-5 text-primary" />
+          Recognition
+        </h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <img
+              src="/images/regeneron-sts-banner.png"
+              alt="Regeneron Science Talent Search banner"
+              className="h-20 w-auto shrink-0 object-contain"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">Regeneron Science Talent Search</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Top 300 Scholar
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-accent">
+              <Award className="h-7 w-7 text-primary" />
+            </div>
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">International Science & Engineering Fair</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                ISEF Finalist
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Before & After comparison */}
       <section className="mt-10">
@@ -75,7 +112,7 @@ export default function AboutPage() {
             icon={<BrainCircuit className="h-5 w-5" />}
             step="3"
             title="Prediction"
-            description="The scaled features are passed through a trained Keras deep learning model, which outputs a probability score (0-1) indicating the likelihood of anti-cancer activity."
+            description="The scaled features are passed through a dense neural network with three hidden layers (126, 63, and 42 units) using ReLU activations and dropout regularization, ending in a sigmoid output that produces a probability score (0-1) for anti-cancer activity."
           />
         </div>
       </section>
@@ -88,7 +125,7 @@ export default function AboutPage() {
         <div className="mt-4 overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
             <tbody>
-              <DetailRow label="Model Architecture" value="Deep Neural Network (Keras / TensorFlow)" />
+              <DetailRow label="Model Architecture" value="4-layer Dense Neural Network (126 -> 63 -> 42 -> 1) with ReLU, Dropout, and Sigmoid output (Keras / TensorFlow)" />
               <DetailRow label="Feature Toolkit" value="iFeature (CTDC, CKSAAGP, CTDD)" />
               <DetailRow label="Preprocessing" value="StandardScaler (scikit-learn)" />
               <DetailRow label="Input Format" value="FASTA (minimum 7 amino acids per sequence)" />
