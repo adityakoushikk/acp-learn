@@ -1,4 +1,4 @@
-import { FlaskConical, Dna, BrainCircuit, TableProperties } from "lucide-react";
+import { FlaskConical, Dna, BrainCircuit, TableProperties, Award, Trophy } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -21,7 +21,35 @@ export default function AboutPage() {
           anti-cancer activity, providing researchers with a fast and
           accessible screening method.
         </p>
+        <p className="text-sm text-muted-foreground">
+          Created by <span className="font-semibold text-foreground">Aditya Koushik</span>
+        </p>
       </div>
+
+      {/* Before & After comparison */}
+      <section className="mt-10">
+        <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <img
+            src="/images/breast-cancer-comparison.png"
+            alt="Microscopy comparison: breast cancer cells before and after treatment with an anticancer peptide"
+            className="w-full"
+          />
+          <div className="grid grid-cols-2 gap-px border-t border-border bg-border">
+            <div className="bg-card px-4 py-3">
+              <p className="text-xs font-semibold text-foreground">Before</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                Breast cancer cells (untreated)
+              </p>
+            </div>
+            <div className="bg-card px-4 py-3">
+              <p className="text-xs font-semibold text-foreground">After</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                Treated with an anticancer peptide predicted by <strong className="text-foreground">ACPLearn</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Pipeline */}
       <section className="mt-12">
@@ -38,8 +66,39 @@ export default function AboutPage() {
             icon={<Dna className="h-5 w-5" />}
             step="1"
             title="Feature Extraction"
-            description="Peptide sequences are encoded into numerical feature vectors using three iFeature descriptors: CTDC, CKSAAGP, and CTDD. These capture compositional and distributional properties of amino acid groups."
-          />
+          >
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Peptide sequences are encoded into numerical feature vectors
+              using three{" "}
+              <a
+                href="https://github.com/Superzchen/iFeature/tree/master"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary underline underline-offset-2"
+              >
+                iFeature
+              </a>{" "}
+              descriptors:
+            </p>
+            <ul className="mt-2 flex flex-col gap-1.5 text-xs leading-relaxed text-muted-foreground">
+              <li>
+                <span className="font-semibold text-foreground">CTDC</span>{" "}
+                {"--"} tracks the composition of amino acids grouped by physicochemical
+                properties (polarity, charge, hydrophobicity, secondary structure
+                preference, etc.).
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">CTDD</span>{" "}
+                {"--"} captures the same property groupings but measures their
+                distribution across the sequence rather than overall composition.
+              </li>
+              <li>
+                <span className="font-semibold text-foreground">CKSAAGP</span>{" "}
+                {"--"} calculates the frequency of amino acid group pairs separated
+                by any k residues, capturing local sequence patterns.
+              </li>
+            </ul>
+          </PipelineCard>
           <PipelineCard
             icon={<TableProperties className="h-5 w-5" />}
             step="2"
@@ -50,7 +109,7 @@ export default function AboutPage() {
             icon={<BrainCircuit className="h-5 w-5" />}
             step="3"
             title="Prediction"
-            description="The scaled features are passed through a trained Keras deep learning model, which outputs a probability score (0-1) indicating the likelihood of anti-cancer activity."
+            description="The scaled features are passed through a 4-layer dense neural network with ReLU activations and dropout regularization, ending in a sigmoid output that produces a probability score (0-1) for anti-cancer activity."
           />
         </div>
       </section>
@@ -63,7 +122,7 @@ export default function AboutPage() {
         <div className="mt-4 overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
             <tbody>
-              <DetailRow label="Model Architecture" value="Deep Neural Network (Keras / TensorFlow)" />
+              <DetailRow label="Model Architecture" value="4-layer Dense Neural Network with ReLU, Dropout, and Sigmoid output (Keras / TensorFlow)" />
               <DetailRow label="Feature Toolkit" value="iFeature (CTDC, CKSAAGP, CTDD)" />
               <DetailRow label="Preprocessing" value="StandardScaler (scikit-learn)" />
               <DetailRow label="Input Format" value="FASTA (minimum 7 amino acids per sequence)" />
@@ -75,6 +134,42 @@ export default function AboutPage() {
               <DetailRow label="Output" value="Per-peptide probability score (0 = non-ACP, 1 = ACP)" last />
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Recognition */}
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+          <Trophy className="h-5 w-5 text-primary" />
+          Recognition
+        </h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <img
+              src="/images/regeneron-sts-banner.png"
+              alt="Regeneron Science Talent Search banner"
+              className="h-20 w-auto shrink-0 object-contain"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">Regeneron Science Talent Search</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Top 300 Scholar
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <img
+              src="/images/isef-banner.jpeg"
+              alt="Regeneron ISEF banner"
+              className="h-20 w-auto shrink-0 rounded-md object-cover"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">International Science & Engineering Fair</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                ISEF Finalist
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -99,11 +194,13 @@ function PipelineCard({
   step,
   title,
   description,
+  children,
 }: {
   icon: React.ReactNode;
   step: string;
   title: string;
-  description: string;
+  description?: string;
+  children?: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-5">
@@ -116,9 +213,13 @@ function PipelineCard({
         </span>
       </div>
       <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        {description}
-      </p>
+      {description ? (
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+      ) : (
+        children
+      )}
     </div>
   );
 }

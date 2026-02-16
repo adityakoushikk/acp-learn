@@ -3,7 +3,33 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { FlaskConical, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+
+function PeptideIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      {/* Peptide backbone: three amino acid nodes connected by bonds */}
+      <circle cx="4" cy="12" r="2.5" />
+      <line x1="6.5" y1="12" x2="9.5" y2="12" />
+      <circle cx="12" cy="12" r="2.5" />
+      <line x1="14.5" y1="12" x2="17.5" y2="12" />
+      <circle cx="20" cy="12" r="2.5" />
+      {/* Side chains */}
+      <line x1="4" y1="9.5" x2="4" y2="6" />
+      <line x1="12" y1="14.5" x2="12" y2="18" />
+      <line x1="20" y1="9.5" x2="20" y2="6" />
+    </svg>
+  );
+}
 import { useState } from "react";
 
 const links = [
@@ -19,7 +45,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2 text-foreground">
-          <FlaskConical className="h-5 w-5 text-primary" />
+          <PeptideIcon className="h-5 w-5 text-primary" />
           <span className="text-lg font-semibold tracking-tight">
             ACPLearn
           </span>
