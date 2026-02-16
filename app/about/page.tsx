@@ -23,6 +23,31 @@ export default function AboutPage() {
         </p>
       </div>
 
+      {/* Before & After comparison */}
+      <section className="mt-10">
+        <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <img
+            src="/images/breast-cancer-comparison.png"
+            alt="Microscopy comparison: breast cancer cells before and after treatment with an anticancer peptide"
+            className="w-full"
+          />
+          <div className="grid grid-cols-2 gap-px border-t border-border bg-border">
+            <div className="bg-card px-4 py-3">
+              <p className="text-xs font-semibold text-foreground">Before</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                Breast cancer cells (untreated)
+              </p>
+            </div>
+            <div className="bg-card px-4 py-3">
+              <p className="text-xs font-semibold text-foreground">After</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                Treated with an anticancer peptide predicted by deep learning model
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pipeline */}
       <section className="mt-12">
         <h2 className="text-xl font-semibold text-foreground">
