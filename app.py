@@ -2,9 +2,11 @@ import os
 import sys  # Import sys to use sys.executable
 import subprocess
 import pandas as pd
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
+CORS(app)
 
 from tensorflow import keras
 import pickle
@@ -89,6 +91,25 @@ def index():
             else:
                 return "Error generating features. Please try again.", 500
     return render_template('index.html')
+
+# JSON API route for the Next.js frontend
+@app.route('/predict', methods=['POST'])
+def predict():
+    peptides = request.form.get('peptides', '')
+    if len(peptides) <= 7:
+        return jsonify({'error': 'Input too short'}), 400
+
+    input_data = process_peptides(peptides)
+    if input_data is not None:
+        predictions = dlmodel.predict(input_data)
+        peptide_names = extract_peptide_names(peptides)
+        results = [
+            {'name': name, 'probability': float(prob[0])}
+            for name, prob in zip(peptide_names, predictions)
+        ]
+        return jsonify({'predictions': results})
+    else:
+        return jsonify({'error': 'Error generating features. Please try again.'}), 500
 
 # New route to serve sample FASTA data
 @app.route('/get_sample_fasta', methods=['GET'])
