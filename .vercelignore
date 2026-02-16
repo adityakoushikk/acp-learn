@@ -1,0 +1,8 @@
+*.py
+*.pkl
+*.h5
+requirements.txt
+iFeature/
+templates/
+sample_fasta.txt
+__pycache__/
