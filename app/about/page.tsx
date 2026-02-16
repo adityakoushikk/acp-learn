@@ -26,40 +26,6 @@ export default function AboutPage() {
         </p>
       </div>
 
-      {/* Awards */}
-      <section className="mt-10">
-        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-primary" />
-          Recognition
-        </h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
-            <img
-              src="/images/regeneron-sts-banner.png"
-              alt="Regeneron Science Talent Search banner"
-              className="h-20 w-auto shrink-0 object-contain"
-            />
-            <div className="flex flex-col justify-center gap-1">
-              <p className="text-sm font-semibold text-foreground">Regeneron Science Talent Search</p>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                Top 300 Scholar
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md bg-accent">
-              <Award className="h-7 w-7 text-primary" />
-            </div>
-            <div className="flex flex-col justify-center gap-1">
-              <p className="text-sm font-semibold text-foreground">International Science & Engineering Fair</p>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                ISEF Finalist
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Before & After comparison */}
       <section className="mt-10">
         <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -137,6 +103,42 @@ export default function AboutPage() {
               <DetailRow label="Output" value="Per-peptide probability score (0 = non-ACP, 1 = ACP)" last />
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Recognition */}
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+          <Trophy className="h-5 w-5 text-primary" />
+          Recognition
+        </h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <img
+              src="/images/regeneron-sts-banner.png"
+              alt="Regeneron Science Talent Search banner"
+              className="h-20 w-auto shrink-0 object-contain"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">Regeneron Science Talent Search</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Top 300 Scholar
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4 rounded-lg border border-border bg-card p-5">
+            <img
+              src="/images/isef-banner.jpeg"
+              alt="Regeneron ISEF banner"
+              className="h-20 w-auto shrink-0 rounded-md object-cover"
+            />
+            <div className="flex flex-col justify-center gap-1">
+              <p className="text-sm font-semibold text-foreground">International Science & Engineering Fair</p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                ISEF Finalist
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
