@@ -33,11 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen min-w-0 flex-col overflow-x-hidden">
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="min-w-0 flex-1">{children}</main>
           <footer className="border-t border-border bg-card py-6">
             <div className="mx-auto max-w-5xl px-4 text-center text-sm text-muted-foreground">
               ACPLearn v1.0 &mdash; Deep learning-based anti-cancer peptide

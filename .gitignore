@@ -17,3 +17,17 @@ variables/
 
 # macOS Finder junk
 .DS_Store
+
+# Node / Next.js
+node_modules/
+.next/
+.turbo
+*.tsbuildinfo
+
+# Env files (secrets)
+.env
+.env.local
+.env.*.local
+
+# Optional: use if you only want pnpm lockfile in the repo
+# package-lock.json

@@ -6,8 +6,8 @@ import { FlaskConical, Upload, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ResultsTable } from "@/components/results-table";
 
-// The Flask backend URL -- adjust if running on a different host/port
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
+// Flask backend: use /api (proxied to localhost:5000 in dev) or set NEXT_PUBLIC_API_BASE for production
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api";
 
 interface Prediction {
   name: string;
@@ -25,14 +25,16 @@ export function PredictorForm() {
     startTransition(async () => {
       try {
         const res = await fetch(`${API_BASE}/get_sample_fasta`);
-        if (!res.ok) throw new Error("Failed to load sample data");
+        if (!res.ok) throw new Error(`Backend returned ${res.status}`);
         const data = await res.text();
         setFastaInput(data);
         setError(null);
         setResults(null);
-      } catch {
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Request failed";
         setError(
-          "Could not load sample FASTA data. Make sure the backend is running."
+          `Could not load sample FASTA. Make sure the Flask backend is running on port 5000. (${msg})`
         );
       }
     });
@@ -57,13 +59,15 @@ export function PredictorForm() {
         body: new URLSearchParams({ peptides: fastaInput }),
       });
 
-      if (!res.ok) throw new Error("Prediction failed");
+      if (!res.ok) throw new Error(`Backend returned ${res.status}`);
 
       const data = await res.json();
       setResults(data.predictions);
-    } catch {
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Request failed";
       setError(
-        "Prediction request failed. Make sure the Flask backend is running."
+        `Prediction failed. Make sure the Flask backend is running on port 5000. (${msg})`
       );
     } finally {
       setLoading(false);
