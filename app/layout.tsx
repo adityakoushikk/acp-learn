@@ -31,9 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        suppressHydrationWarning
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}
       >
         <div className="flex min-h-screen flex-col">
