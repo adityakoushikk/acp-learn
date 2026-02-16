@@ -2,7 +2,8 @@ import { FlaskConical, Dna, BrainCircuit, TableProperties, Award, Trophy } from 
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:py-20">
+    <div className="flex flex-1 items-start justify-center px-4 py-12 sm:py-20">
+      <div className="w-full max-w-3xl">
       {/* Hero */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-primary">
@@ -185,6 +186,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+      </div>
     </div>
   );
 }
