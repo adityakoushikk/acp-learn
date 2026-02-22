@@ -2,10 +2,10 @@ import os
 import sys  # Import sys to use sys.executable
 import subprocess
 import pandas as pd
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-app = Flask(__name__, static_url_path='/static', static_folder='static')
+app = Flask(__name__)
 CORS(app)
 
 from tensorflow import keras
@@ -77,22 +77,7 @@ def extract_peptide_names(peptides):
     peptide_names = [line[1:] for line in peptides.splitlines() if line.startswith('>')]
     return peptide_names
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        peptides = request.form['peptides']
-        if len(peptides) > 7:
-            input_data = process_peptides(peptides)
-            if input_data is not None:
-                predictions = dlmodel.predict(input_data)
-                peptide_names = extract_peptide_names(peptides)
-                peptide_predictions = dict(zip(peptide_names, predictions))
-                return render_template('results.html', predictions=peptide_predictions)
-            else:
-                return "Error generating features. Please try again.", 500
-    return render_template('index.html')
-
-# JSON API route for the Next.js frontend
+# API route for the Next.js frontend
 @app.route('/predict', methods=['POST'])
 def predict():
     peptides = request.form.get('peptides', '')
