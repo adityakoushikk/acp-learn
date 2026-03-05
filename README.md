@@ -1,12 +1,11 @@
-Visit [acp-learn.com](https://acp-learn.com)
+Visit [acp-learn.com](https://acp-learn.com) - old version
 
-## Local development
+## Local development on updated version: 
 
-1. **Start the Flask backend** (in one terminal):
-   ```bash
+1. **Start the Flask backend**:
    ./start-backend.sh
    ```
-2. **Start the Next.js app** (in another terminal):
+2. **Start the Next.js app**:
    ```bash
    pnpm dev
    ```
