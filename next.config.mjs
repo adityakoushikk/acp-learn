@@ -1,10 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
+  output: "standalone",
+  poweredByHeader: false,
   async rewrites() {
-    // App URL: http://localhost:3000 (use that in the browser).
-    // Proxy /api/* to Flask (127.0.0.1:5000) so the frontend can call the backend.
+    const backendUrl = (
+      process.env.BACKEND_URL ?? "http://127.0.0.1:5001"
+    ).replace(/\/$/, "");
+
+    // Local development proxy. In production Nginx sends /api/* directly to
+    // Gunicorn, but keeping this rewrite makes `pnpm dev` work identically.
     return [
-      { source: "/api/:path*", destination: "http://127.0.0.1:5000/:path*" },
+      { source: "/api/:path*", destination: `${backendUrl}/:path*` },
     ];
   },
 };

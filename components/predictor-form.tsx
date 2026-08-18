@@ -6,7 +6,7 @@ import { FlaskConical, Upload, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ResultsTable } from "@/components/results-table";
 
-// Flask backend: use /api (proxied to localhost:5000 in dev) or set NEXT_PUBLIC_API_BASE for production
+// Same-origin by default: Next proxies locally and Nginx routes /api in production.
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api";
 
 interface Prediction {
@@ -34,7 +34,7 @@ export function PredictorForm() {
         const msg =
           err instanceof Error ? err.message : "Request failed";
         setError(
-          `Could not load sample FASTA. Make sure the Flask backend is running on port 5000. (${msg})`
+          `Could not load sample FASTA. Make sure the Flask backend is running on port 5001. (${msg})`
         );
       }
     });
@@ -59,15 +59,19 @@ export function PredictorForm() {
         body: new URLSearchParams({ peptides: fastaInput }),
       });
 
-      if (!res.ok) throw new Error(`Backend returned ${res.status}`);
-
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error ?? `Backend returned ${res.status}`);
+      }
+      if (!Array.isArray(data?.predictions)) {
+        throw new Error("Backend returned an invalid response");
+      }
       setResults(data.predictions);
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : "Request failed";
       setError(
-        `Prediction failed. Make sure the Flask backend is running on port 5000. (${msg})`
+        `Prediction failed. Make sure the Flask backend is running on port 5001. (${msg})`
       );
     } finally {
       setLoading(false);
@@ -84,29 +88,29 @@ export function PredictorForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-primary">
-          <FlaskConical className="h-5 w-5" />
-          <span className="text-xs font-semibold uppercase tracking-widest">
+      <div className="flex max-w-4xl flex-col gap-3">
+        <div className="flex items-center gap-2.5 text-primary">
+          <FlaskConical className="h-6 w-6" />
+          <span className="text-sm font-semibold uppercase tracking-widest sm:text-base">
             Peptide Predictor
           </span>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground text-balance sm:text-4xl">
+        <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           ACPLearn v1.0
         </h1>
-        <p className="text-base leading-relaxed text-muted-foreground text-pretty">
+        <p className="text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
           Deep learning-based anti-cancer peptide predictor. Paste your peptide
           sequences in FASTA format below to get started.
         </p>
       </div>
 
       {/* Textarea */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <label
           htmlFor="fasta-input"
-          className="text-sm font-medium text-foreground"
+          className="text-base font-medium text-foreground sm:text-lg"
         >
           Enter peptides in FASTA format
           <span className="ml-1 text-muted-foreground font-normal">
@@ -121,12 +125,12 @@ export function PredictorForm() {
             setFastaInput(e.target.value);
             if (error) setError(null);
           }}
-          rows={12}
+          rows={16}
           placeholder={`>ACP_1|1\nAIGSILGALAKGLPTLISWIKNR\n>ACP_2|1\nAWKKWAKAWKWAKAKWWAKAA`}
           className={cn(
-            "w-full rounded-lg border bg-card px-4 py-3 font-mono text-sm leading-relaxed text-foreground placeholder:text-muted-foreground/50",
+            "min-h-80 w-full resize-y rounded-xl border bg-card px-4 py-4 font-mono text-base leading-7 text-foreground placeholder:text-muted-foreground/50 sm:min-h-96 sm:px-5 sm:py-5 sm:text-lg lg:min-h-[28rem]",
             "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
-            "resize-y transition-shadow",
+            "transition-shadow",
             error ? "border-destructive" : "border-input"
           )}
           required
@@ -135,28 +139,28 @@ export function PredictorForm() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-4 text-base text-destructive sm:px-5">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <button
           type="button"
           onClick={handleLoadSample}
           disabled={isPending}
           className={cn(
-            "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground",
+            "inline-flex min-h-12 w-full items-center justify-center gap-2.5 rounded-xl border border-border bg-card px-6 py-3 text-base font-medium text-foreground sm:w-auto sm:text-lg",
             "transition-colors hover:bg-secondary",
             "disabled:pointer-events-none disabled:opacity-50"
           )}
         >
           {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
-            <Upload className="h-4 w-4" />
+            <Upload className="h-5 w-5" />
           )}
           Load Sample FASTA
         </button>
@@ -164,23 +168,23 @@ export function PredictorForm() {
           type="submit"
           disabled={loading}
           className={cn(
-            "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground",
+            "inline-flex min-h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-primary px-6 py-3 text-base font-medium text-primary-foreground sm:w-auto sm:text-lg",
             "transition-colors hover:bg-primary/90",
             "disabled:pointer-events-none disabled:opacity-50"
           )}
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
-            <FlaskConical className="h-4 w-4" />
+            <FlaskConical className="h-5 w-5" />
           )}
           {loading ? "Predicting..." : "Run Prediction"}
         </button>
       </div>
 
       {/* Info */}
-      <div className="rounded-lg border border-border bg-secondary/50 px-4 py-3">
-        <p className="text-xs leading-relaxed text-muted-foreground">
+      <div className="rounded-xl border border-border bg-secondary/50 px-5 py-5 sm:px-6 sm:py-6">
+        <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
           <strong className="text-foreground">How it works:</strong> ACPLearn
           extracts CTDC, CKSAAGP, and CTDD features from your peptide sequences
           using iFeature, then feeds them through a trained deep learning model

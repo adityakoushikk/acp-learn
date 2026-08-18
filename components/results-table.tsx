@@ -13,6 +13,13 @@ interface ResultsTableProps {
   onBack: () => void;
 }
 
+function escapeCsvField(value: string): string {
+  // Quoting prevents commas/newlines from breaking the CSV. Prefixing formula
+  // characters prevents spreadsheet applications from executing a FASTA name.
+  const safeValue = /^[=+\-@]/.test(value) ? `'${value}` : value;
+  return `"${safeValue.replaceAll('"', '""')}"`;
+}
+
 function getConfidenceLabel(prob: number): {
   label: string;
   className: string;
@@ -35,7 +42,7 @@ export function ResultsTable({ predictions, onBack }: ResultsTableProps) {
     const rows = predictions
       .map(
         (p) =>
-          `${p.name},${p.probability.toFixed(4)},${getConfidenceLabel(p.probability).label}`
+          `${escapeCsvField(p.name)},${p.probability.toFixed(4)},${getConfidenceLabel(p.probability).label}`
       )
       .join("\n");
     const blob = new Blob([header + rows], { type: "text/csv" });
@@ -48,58 +55,58 @@ export function ResultsTable({ predictions, onBack }: ResultsTableProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Prediction Results
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-2 text-base text-muted-foreground sm:text-lg">
             {predictions.length} peptide{predictions.length !== 1 ? "s" : ""}{" "}
             analyzed
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 md:flex md:w-auto">
           <button
             onClick={onBack}
             className={cn(
-              "inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground",
+              "inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl border border-border bg-card px-5 py-3 text-base font-medium text-foreground sm:text-lg",
               "transition-colors hover:bg-secondary"
             )}
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
             Back to Input
           </button>
           <button
             onClick={handleExportCSV}
             className={cn(
-              "inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground",
+              "inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-primary px-5 py-3 text-base font-medium text-primary-foreground sm:text-lg",
               "transition-colors hover:bg-primary/90"
             )}
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-5 w-5" />
             Export CSV
           </button>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg border border-border">
+      <div className="overflow-hidden rounded-xl border border-border">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[44rem] text-base">
             <thead>
               <tr className="border-b border-border bg-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                <th className="px-5 py-4 text-left font-medium text-muted-foreground">
                   #
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                <th className="px-5 py-4 text-left font-medium text-muted-foreground">
                   Peptide Name
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                <th className="px-5 py-4 text-left font-medium text-muted-foreground">
                   ACP Probability
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                <th className="px-5 py-4 text-left font-medium text-muted-foreground">
                   Confidence
                 </th>
               </tr>
@@ -115,19 +122,19 @@ export function ResultsTable({ predictions, onBack }: ResultsTableProps) {
                       i === predictions.length - 1 && "border-b-0"
                     )}
                   >
-                    <td className="px-4 py-3 text-muted-foreground tabular-nums">
+                    <td className="px-5 py-4 text-muted-foreground tabular-nums">
                       {i + 1}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-foreground">
+                    <td className="px-5 py-4 font-mono text-sm text-foreground sm:text-base">
                       {p.name}
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs tabular-nums text-foreground">
+                    <td className="px-5 py-4 font-mono text-sm tabular-nums text-foreground sm:text-base">
                       {p.probability.toFixed(4)}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-4">
                       <span
                         className={cn(
-                          "inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium",
+                          "inline-flex rounded-full px-3 py-1 text-sm font-medium",
                           className
                         )}
                       >
@@ -143,7 +150,7 @@ export function ResultsTable({ predictions, onBack }: ResultsTableProps) {
       </div>
 
       {/* Summary */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         <SummaryCard
           label="Total Peptides"
           value={predictions.length.toString()}
@@ -168,9 +175,9 @@ export function ResultsTable({ predictions, onBack }: ResultsTableProps) {
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-4">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">
+    <div className="rounded-xl border border-border bg-card px-5 py-5 sm:px-6">
+      <p className="text-base font-medium text-muted-foreground">{label}</p>
+      <p className="mt-2 text-3xl font-bold tabular-nums text-foreground">
         {value}
       </p>
     </div>

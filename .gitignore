@@ -21,6 +21,7 @@ variables/
 # Node / Next.js
 node_modules/
 .next/
+.next-*/
 .turbo
 *.tsbuildinfo
 

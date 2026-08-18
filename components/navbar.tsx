@@ -42,23 +42,23 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-foreground">
-          <PeptideIcon className="h-5 w-5 text-primary" />
-          <span className="text-lg font-semibold tracking-tight">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/90 backdrop-blur-md">
+      <div className="flex w-full items-center justify-between px-4 py-3.5 sm:px-6 lg:px-10 xl:px-14 2xl:px-20">
+        <Link href="/" className="flex items-center gap-2.5 text-foreground">
+          <PeptideIcon className="h-6 w-6 text-primary sm:h-7 sm:w-7" />
+          <span className="text-xl font-semibold tracking-tight sm:text-2xl">
             ACPLearn
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-2 md:flex" aria-label="Main navigation">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                "rounded-lg px-4 py-2.5 text-base font-medium transition-colors lg:px-5 lg:text-lg",
                 pathname === link.href
                   ? "bg-accent text-accent-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -71,24 +71,28 @@ export function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-muted-foreground"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {/* Mobile nav */}
       {mobileOpen && (
-        <nav className="border-t border-border bg-card px-4 pb-3 md:hidden" aria-label="Mobile navigation">
+        <nav
+          className="border-t border-border bg-card px-4 py-3 sm:px-6 md:hidden"
+          aria-label="Mobile navigation"
+        >
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "block rounded-lg px-4 py-3 text-lg font-medium transition-colors",
                 pathname === link.href
                   ? "bg-accent text-accent-foreground"
                   : "text-muted-foreground hover:text-foreground"
