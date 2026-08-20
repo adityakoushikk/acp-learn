@@ -21,7 +21,7 @@ In summary, for the first time, the deep learning approach described here applie
 
 # Methods
 
-For more information about the methodology, visit About.pdf, a soon-to-be-published paper. In summary, we utilize chemical properties of peptides such as AA composition, polarity, etc. for feature engineering to train a DNN. We scrape known ACPs as training data from CancerPPD. ACPLearn beats out other state of the art methods on a validation dataset ACP740
+For more information about the methodology, visit About.pdf. In summary, I utilized chemical properties of peptides such as AA composition, polarity, etc. for feature engineering to train a DNN. We scrape known ACPs as training data from CancerPPD. ACPLearn beats out other state of the art methods on a validation dataset ACP740
 
 
 <div align="center">
